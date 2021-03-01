@@ -1,36 +1,90 @@
 import Navbar from '../src/components/layouts/Navbar'
 import Users from '../src/components/users/Users'
+import User from '../src/components/users/User'
 import Search from '../src/components/users/search'
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
+import {Alert} from './components/layouts/Alert'
+import About from './components/pages/About'
 import './App.css'
 
 function App() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false)
+  const [alert, setAlert] = useState(null)
+  const [user, setUser] = useState({})
 
   useEffect(() => {
 
     fetchData()
   }, [])
 
-  const fetchData = async () => {
+  // search github users
+  const searchUsers = async text => {
     setLoading(true)
-    const res = await axios.get(`https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`)
-    console.log(res.data);
-    setUsers(res.data)
+    const res = 
+    await axios.get(`https://api.github.com/search/users?q=${text}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`)
+    setUsers(res.data.items)
+    console.log(text)
     setLoading(false)
+  }
+
+  // search single github user
+  const getUser = async (username) => {
+    setLoading(true)
+    const res = 
+    await axios.get(`https://api.github.com/users/${username}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`)
+    setUser(res.data)
+    console.log(username)
+    setLoading(false)
+  }
+
+  // clear users from state 
+  const clearUsers = () => {
+    setUsers([]);
+    setLoading(false);
+  }
+ 
+//    // show alert on any error 
+//  setAlert({msg: msg, type: type})
+
+
+  const fetchData = async () => {
+    // setLoading(true)
+    // const res = await axios.get(`https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`)
+    //  setUsers(res.data)
+    // setLoading(false)
   }
 
 
   return (
+    <Router>
     <div className="App">
       <Navbar />
+      <Alert alert={alert} />
       <div className="container">
-        <Search />
+        {/* the home page */}
+      <Route exact path = "/"  render = {(props) => (
+        <><Search searchUsers={searchUsers} 
+                clearUsers={clearUsers}
+                setAlert={setAlert}
+                showClear = {users.length > 0 ? true : false}/>
         <Users loading={loading} users={users} />
+        </>
+      )}/>
+      <Route exact path = "/about" component = {About}  />
+      <Route exact path = "/user/:login" 
+       render = {props => (
+         <User {...props} getUser={getUser} user={user} loading={loading} />
+       )}
+      />
+
+
+  
       </div>
     </div>
+    </Router>
   );
 }
 
