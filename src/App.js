@@ -14,6 +14,7 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [alert, setAlert] = useState(null)
   const [user, setUser] = useState({})
+  const [repos, setRepos] = useState([])
 
   useEffect(() => {
 
@@ -39,6 +40,17 @@ function App() {
     console.log(username)
     setLoading(false)
   }
+
+ // get Users Repo
+ const getUserRepos = async (username) => {
+  setLoading(true)
+  const res = 
+  await axios.get(`https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`)
+  setRepos(res.data)
+  console.log(username)
+  setLoading(false)
+}
+
 
   // clear users from state 
   const clearUsers = () => {
@@ -76,7 +88,13 @@ function App() {
       <Route exact path = "/about" component = {About}  />
       <Route exact path = "/user/:login" 
        render = {props => (
-         <User {...props} getUser={getUser} user={user} loading={loading} />
+         <User {...props} 
+         getUser={getUser} 
+         user={user} 
+         loading={loading}
+         getUserRepos ={getUserRepos}
+         repos={repos}
+          />
        )}
       />
 

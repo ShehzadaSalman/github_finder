@@ -15,7 +15,7 @@ export default class Search extends Component {
     // we use arrow function to bind the function to the file and access stuff like this
     onSubmit = (e) => {
         e.preventDefault();
-        if(this.state.text == ''){
+        if(this.state.text === ''){
             this.props.setAlert({msg: 'Please enter something', type:'light'})
             setTimeout(()=> this.props.setAlert(null), 3000) 
         }else{
