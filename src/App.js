@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import {Alert} from './components/layouts/Alert'
 import About from './components/pages/About'
+import GithubState from './context/github/GithubState'
 import './App.css'
 
 function App() {
@@ -71,11 +72,12 @@ function App() {
 
 
   return (
-    <Router>
+<GithubState>
+<Router>
     <div className="App">
       <Navbar />
-      <Alert alert={alert} />
       <div className="container">
+      <Alert alert={alert} />
         {/* the home page */}
       <Route exact path = "/"  render = {(props) => (
         <><Search searchUsers={searchUsers} 
@@ -103,6 +105,7 @@ function App() {
       </div>
     </div>
     </Router>
+    </GithubState>
   );
 }
 
