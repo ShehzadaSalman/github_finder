@@ -1,24 +1,26 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useContext } from 'react'
 import Spinner from '../layouts/Spinner'
 import PropTypes from 'prop-types'
 import Repos from '../repos/Repos'
 import {Link} from 'react-router-dom'
-
+import GithubContext from '../../context/github/githubContext'
 const User = (props) => {
+const githubContext = useContext(GithubContext)
+const {getUser, loading, user} = githubContext;
 
-    useEffect(() =>{
-        props.getUser(props.match.params.login);
+useEffect(() =>{
+        getUser(props.match.params.login);
         props.getUserRepos(props.match.params.login);
     }, [])
    
-
+  
 
         const {
             name, avatar_url,company,
             location, bio,blog, login, html_url, followers,
             following, public_repos, public_gists, hireable
-       } = props.user;
-       const {loading, repos} = props;
+       } = githubContext.user;
+       const {repos} = props;
        
        if(loading) return <Spinner/>
        return ( 
@@ -96,10 +98,7 @@ const User = (props) => {
 
 
 User.propTypes = {
-    loading: PropTypes.bool.isRequired,
-    user: PropTypes.object.isRequired,
     repos: PropTypes.array.isRequired,
-    getUser: PropTypes.func.isRequired,
     getUserRepos: PropTypes.func.isRequired
 }
 
