@@ -7,7 +7,9 @@ const Navbar = () => {
         <nav className="navbar bg-danger">
             <div className="container">
                 <a className="navbar-brand" href="#">
+                   <Link to="/"> 
                   <i className="fa fa-github"></i> Github finder
+                  </Link>
                 </a>
                 <ul className="mt-3">
                     <li><Link to="/">Home</Link></li>

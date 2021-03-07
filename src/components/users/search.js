@@ -1,21 +1,23 @@
 import React, { useState, useContext } from 'react'
 import GithubContext from '../../context/github/githubContext'
+import AlertContext from '../../context/alert/alertContext'
 import PropTypes from 'prop-types'
 
-const Search = ({setAlert}) => {
+const Search = () => {
  
     const githubContext = useContext(GithubContext)
+    const alertContext = useContext(AlertContext)
     const [text, setText] = useState('');
-
-
+    
+  
 
   const  onChange = (e) => setText(e.target.value)
     // we use arrow function to bind the function to the file and access stuff like this
  const  onSubmit = (e) => {
         e.preventDefault();
         if(text === ''){
-            setAlert({msg: 'Please enter something', type:'light'})
-            setTimeout(()=> setAlert(null), 3000) 
+            alertContext.setAlert({msg: 'Please enter something', type:'light'})
+            // setTimeout(()=> setAlert(null), 3000) 
         }else{
         githubContext.searchUsers(text)
         setText('')

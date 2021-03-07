@@ -6,11 +6,11 @@ import {Link} from 'react-router-dom'
 import GithubContext from '../../context/github/githubContext'
 const User = (props) => {
 const githubContext = useContext(GithubContext)
-const {getUser, loading, user} = githubContext;
+const {getUser, loading, user, repos, getUserRepos} = githubContext;
 
-useEffect(() =>{
+useEffect(() => {
         getUser(props.match.params.login);
-        props.getUserRepos(props.match.params.login);
+        getUserRepos(props.match.params.login);
     }, [])
    
   
@@ -20,7 +20,7 @@ useEffect(() =>{
             location, bio,blog, login, html_url, followers,
             following, public_repos, public_gists, hireable
        } = githubContext.user;
-       const {repos} = props;
+     
        
        if(loading) return <Spinner/>
        return ( 
@@ -96,10 +96,5 @@ useEffect(() =>{
         )
     }
 
-
-User.propTypes = {
-    repos: PropTypes.array.isRequired,
-    getUserRepos: PropTypes.func.isRequired
-}
 
 export default User
